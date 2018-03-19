@@ -1,9 +1,64 @@
 ### RESTful-APIs in Node/Express
 
-An application to demostrate RESTful-APIs created in Node.js, Express and MongoDB
+A Todo application to demostrate RESTful-APIs.
 
-Express Server is running at port 3000.
+Developed in Node.js, Express.js and MongoDB
 
-JsonWebToken is used for authentication and authorization. 
+User can signup and login the application. 
+After login, they can peform CRUD operations. 
 
-Bcrypt.JS is used for password protection in the MongoDB.
+[JsonWebToken](https://jwt.io/) is used for authentication.
+
+Used BCrypt for password encryption.
+
+Once a user is sign up then they will get back a token from JWT.
+Below is the code for creating that token:
+
+```node
+UserSchema.methods.generateAuthToken = function() {
+	const user = this;
+	const access = 'auth';
+	const token = jwt.sign({
+							_id: user._id.toHexString(),
+							access
+						}, 'secret').toString();
+
+	user.tokens = user.tokens.concat([{ access, token }]);
+
+	return user.save().then(() => {
+		return token;
+	});
+
+}
+```
+
+When the user, login then the plain password is hashed and compared with the password in the MongoDB.
+Below is the code for that:
+
+```node
+UserSchema.statics.findByCredentials = function(email, password) {
+	const User = this;
+
+	return User.findOne({ email })
+				.then((user) => {
+					
+					if (!user) {
+						return Promise.reject();
+					}
+
+					return new Promise((resolve, reject) => {
+						bcrypt.compare(password, user.password, (err, res) => {
+							
+							if (res) {
+								resolve(user);
+							} else {
+								reject();
+							}
+
+						});
+
+					});
+
+	});	
+}
+```
