@@ -7,7 +7,7 @@ User can signup and login the application. After login, they can peform CRUD ope
 
 To save data in the MongoDB, `Mongoose` an ORM is used to create Schemas. 
 When a user saves a new `doc` in the MongoDB then an instance of the Schema is created. 
-Below is the example of `ToDO Schema` create in `Mongoose`.
+Below is the example of `ToDo Schema` create in `Mongoose`.
 
 ```node
 const mongoose = require('mongoose');
@@ -47,9 +47,9 @@ UserSchema.methods.generateAuthToken = function() {
 	const user = this;
 	const access = 'auth';
 	const token = jwt.sign({
-			_id: user._id.toHexString(),
-			access
-		}, 'secret').toString();
+							_id: user._id.toHexString(),
+							access
+						}, 'secret').toString();
 
 	user.tokens = user.tokens.concat([{ access, token }]);
 
@@ -68,20 +68,24 @@ UserSchema.statics.findByCredentials = function(email, password) {
 	const User = this;
 
 	return User.findOne({ email })
-		.then((user) => {
-			if (!user) {
-				return Promise.reject();
-			}
-
-			return new Promise((resolve, reject) => {
-				bcrypt.compare(password, user.password, (err, res) => {
-					if (res) {
-						resolve(user);
-					} else {
-						reject();
+				.then((user) => {
+					
+					if (!user) {
+						return Promise.reject();
 					}
-				});
-			});
+
+					return new Promise((resolve, reject) => {
+						bcrypt.compare(password, user.password, (err, res) => {
+							
+							if (res) {
+								resolve(user);
+							} else {
+								reject();
+							}
+
+						});
+
+					});
 	});	
 }
 ```
