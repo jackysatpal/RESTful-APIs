@@ -1,13 +1,13 @@
 # RESTful-APIs
 
-A Todo application to demostrate RESTful-APIs.
+A Todo application to demostrate RESTful-APIs.  
 Developed in Node.js, Express.js and MongoDB.
 
 User can signup and login the application. After login, they can peform CRUD operations. 
 
 To save data in the MongoDB, `Mongoose` an ORM is used to create Schemas. 
-When a user saves a new `doc` in the MongoDB then instance of these Schema is created. 
-Below is the example of `ToDO Schema` create in `Mongoose`
+When a user saves a new `doc` in the MongoDB then an instance of the Schema is created. 
+Below is the example of `ToDO Schema` create in `Mongoose`.
 
 ```node
 const mongoose = require('mongoose');
